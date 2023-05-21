@@ -1,0 +1,57 @@
+THE ENVIRONMENT:
+	Make a copy of the environment once to new_environ
+	setenv:
+	 already implemented
+	getenv:
+	already implemented
+	unsetenv:
+		when unsetenv is called, it goes through the environment and looks for
+		match. if no match is found, it returns
+		else if a match is found, constructs a new deleted struct
+		sets it index and value, appends it to the trash environment, and frees the entry in the
+		main environment
+implement a trash list for deleted environment variable:
+	-this trash list is a linked list of deleted variables
+	-each deleted struct holds the index from which it was popped off
+	and also it's value( in the form :"name=value")
+	-when setenv is called, it first looks into the trash environment 
+	if trash is empty, it appends to the environment normally
+	if trash is not empty, it fills the position of the deleted struct
+
+THE PATH:
+	the path is an entry in the environment extracted to it's own linked list
+	trace: returns the absolute path of a command
+ALIAS:
+	the alias is a linked list
+	when alias is called, it goes through the argument list passed
+	if there's no argument passed to it, it basically gets a list of aliases
+	if there's an equal sign in an argument, it separates it into two operands and it calls _setalias on it
+	if there's no equal sign, it calls a _getalias on the single operand - prints out the equivalent value followed by a new line
+variables:
+	this is a linked list of dyn allocd strings that holds all
+	variables that are not in the environment e.g => pid($$), exit_status($?)
+VARIABLE REPLACEMENTS(or expansion):
+	in each command in a point or flow,
+	if any of the arguments passed into the command contains a dollar sign
+	we check if it's in either the environment or the variables
+	if it's there, we get the corresponding 'value' of the
+	'$variable' and replace it's position in the argument vector with the proper 'value'
+	[meaning that argument vector(our version of it)
+	is going to be an array of dynamically allocated strings(split_str)]
+	and then proceeds with the execution of the arguments
+	note: a variable has to begin with $ before you can search it against the variables list
+word_tok:
+	this splits a string(or_str) without removing the non-tokens
+	- create a struct for the string passed in. this struct looks like this:
+	{
+		int check_points[1024];
+		char vals[1024];
+	}
+	- it returns this struct
+	- we make an array of strings (s_arr) with the same size as the checkpoints
+	- we go through the check_points returned from this struct
+	- in each iteration with each item as 'point'
+		- we allocate a new string(n_str) that has a length of (_strlen(or_str + point + 1) + 1)
+		- we do a mem_cpy of (or_str + point) to n_str
+		- we set n_str[0] to vals[current index]
+		- we set s_arr[current index]
