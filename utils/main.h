@@ -14,6 +14,7 @@
 /* MACROS */
 #define __cp__(x, y) (_strcpy(&x, &y))
 #define _al_len_(x) ((_len_p((void **)x)) + (1))
+#define EXIT (-3)
 
 /* STRUCTURES AND DECLARATIONS */
 typedef struct command
@@ -21,6 +22,7 @@ typedef struct command
 	char *separator;
 	char *command;
 	int *status;
+	int id;
 	struct command *next;
 } comm_t;
 
@@ -56,6 +58,7 @@ typedef struct wtok
 	int check_points[1024];
 	char vals[1024];
 } wtok_t;
+
 typedef struct builtin_s
 {
 	char *name;
@@ -110,7 +113,9 @@ void append_comm_list(comm_list_t list, int *index);
 void append_comm(comm_list_t* list, char separator,
 	const char* command, int status);
 void print_comms(const comm_list_t list);
+void clear_comms(comm_list_t list);
 void print_comms_full();
+void remove_command(comm_t *list, int value);
 trashenv_t *get_trash(trashenv_t *list, char *value);
 void append_trash(char *value, int index);
 void remove_trash(trashenv_t *list, char *value);
@@ -138,6 +143,8 @@ void empty_state_buff(char *delim);
 int parse_to_commands(char *string);
 void handle_parsed_commands(char **);
 void free_commands();
+int exec_all_commands();
+int exec_comms(const comm_list_t list);
 
 /*_________________CORE___________________*/
 /* ENVIRONMENT HANDLERS */

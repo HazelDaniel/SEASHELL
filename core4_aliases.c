@@ -106,8 +106,6 @@ void print_aliases()
 {
 	alias_t *current = aliases, *next = NULL;
 
-	if (!current)
-		puts("(nil)");
 	while (current)
 	{
 		printf("%s\n", current->value);

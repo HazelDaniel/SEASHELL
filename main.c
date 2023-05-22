@@ -13,13 +13,17 @@ char *prompts[10] = {"_$ ", " ___(($USER@$hostname)-[$PWD]\n|___: ", "$"}, *prom
 
 void handle_signal(int sig)
 {
-	char *flush_prompt = "\n";
+	char *sig_str = _itoa(sig);
 
-	(void)sig, prompt = var_replace(prompts[1]);
-	signal(SIGINT, handle_signal);
-	fflush(stdin);
-	write(STDIN_FILENO, flush_prompt, 1);
-	write(STDIN_FILENO, prompt, _strlen(prompt));
+	(void)sig;
+	if (isatty(STDIN_FILENO))
+	{
+		signal(SIGINT, handle_signal);
+		fflush(stdin);
+		write(STDIN_FILENO, "\n", 1);
+		write(STDIN_FILENO, prompt, _strlen(prompt));
+
+	}
 }
 
 /**
@@ -32,7 +36,7 @@ int main(int argc, char *argv[], char *envp[])
 	char *command_list = "\tls || echo hello world ; alx-milestones && echo hello world ; ps && pwd || head -n 1 && la";
 	char **cmd;
 	int status;
-	size_t read, size = 0;
+	size_t read = 0, size = 0;
 
 	_copyenv();
 	name = argv[0], (void)envp;
@@ -54,7 +58,7 @@ int main(int argc, char *argv[], char *envp[])
 			status = parse_to_commands(buff);
 			if (status == -1)
 				return (status);
-			print_comms_full();
+			exec_all_commands();
 		}
 		free(buff);
 		buff = NULL;

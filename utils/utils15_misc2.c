@@ -142,14 +142,17 @@ char* _strncpy(char* dest, const char* src, size_t n)
 
 void trim_str_arr(char **args)
 {
-	int i;
+	int i, last_nl;
 	char *tmp;
 
 	if (!args)
 		return;
 	for (i = 0; args[i]; i++)
 	{
+		last_nl = last_oc_of(args[i], '\n');
 		tmp = _trim(args[i]);
+		if (last_nl + 1 == _strlen(args[i]))
+			tmp[last_nl] = '\0';
 		free(args[i]);
 		args[i] = tmp;
 	}

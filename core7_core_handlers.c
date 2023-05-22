@@ -51,7 +51,7 @@ int handle_alias(char **args)
 {
 	int i, ret_count = 0;
 
-	if (!args)
+	if (!args || !args[0])
 		return alias(NULL);
 	for (i = 0; args[i]; i++)
 	{

@@ -4,6 +4,7 @@ void append_comm(comm_list_t* list, char separator,
 	const char* command, int status)
 {
 	comm_t* new_comm = (comm_t *)malloc(sizeof(comm_t)), *current;
+	static int id = 0;
 
 	if (!new_comm)
 		return;
@@ -11,6 +12,7 @@ void append_comm(comm_list_t* list, char separator,
 	new_comm->separator[1] = '\0';
 	new_comm->command = _strddup((char *)command);
 	new_comm->status = (int*)malloc(sizeof(int));
+	new_comm->id = id++;
 	*(new_comm->status) = status;
 	new_comm->next = NULL;
 
@@ -110,15 +112,38 @@ void clear_comms(comm_list_t list)
 void free_commands()
 {
 	int i = 0, j = 0;
-	comm_list_t *current = commands, next = NULL;
 
 	if (!commands)
 		return;
 
-	for (i = 0; current[i]; i++)
+	for (i = 0; commands[i]; i++)
 	{
-		clear_comms(current[i]);
+		clear_comms(commands[i]);
 	}
 	free(commands);
 	commands = NULL;
+}
+
+void remove_command(comm_t *list, int value)
+{
+	comm_t *current = list, *prev = NULL;
+
+	if (!current)
+		return;
+	while (current && (current->id != value))
+	{
+		prev = current;
+		current = current->next;
+	}
+	if (current)
+	{
+		if (!prev)
+			list = current->next;
+		else
+			prev->next = current->next;
+		free(current->command);
+		free(current->status);
+		free(current);
+		current = NULL;
+	}
 }
