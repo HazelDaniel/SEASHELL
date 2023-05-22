@@ -18,8 +18,9 @@ int is_hwp(char c)
 
 int is_word(char c)
 {
-	if (c >= 65 && c <= 90 ||
-	c >= 97 && c <= 122 || c == 95)
+	if ((c >= 65 && c <= 90 )||
+	(c >= 97 && c <= 122 )||( c == 95 )||
+	(c >= 48 && c <= 57))
 		return (1);
 
 	return (0);
@@ -57,4 +58,17 @@ int last_oc(int (* f)(char c), char *str)
 		return (count);
 	else
 		return (-1);
+}
+
+int last_spn_oc(int (* f)(char c), char *str)
+{
+	int count = 0;
+
+	if (!str)
+		return (-1);
+	while (str[count] && f(str[count]))
+		count++;
+	count--;
+
+	return (count);
 }

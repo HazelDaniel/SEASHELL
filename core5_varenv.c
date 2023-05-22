@@ -2,7 +2,7 @@
 
 static int compare_and_sub(var_t **current_ptr, var_t **new_ptr,
 	char **input_ptr, char **cpy_ptr, char **key_ptr);
-void norm_dyn_str(char **str_ptr);
+char *eval_n_expand(char **str_p);
 
 void _getall_vars()
 {
@@ -153,7 +153,7 @@ char *expand(char *input)
 {
 	char **splitted = NULL, *match, *query,
 	*res = NULL, *res_match, *patch = NULL, *pre_patch = NULL;
-	int i, ind = -1, l_word = -1, res_len;
+	int i, ind = -1, ind2 = -1, l_word = -1, res_len;
 
 	splitted = word_tok(input);
 	if (!splitted)
@@ -163,17 +163,21 @@ char *expand(char *input)
 		if (!in_str('$', splitted[i]))
 			continue;
 		ind = first_oc_of(splitted[i], '$');
-		l_word = last_oc(is_word, splitted[i]);
+		ind2 = last_oc_of(splitted[i], '$');
+		if (ind2 > ind + 1)
+			continue;
+		l_word = last_spn_oc(is_word, splitted[i] + ind + 1);
+		l_word += ind + 1;
 		pre_patch = _strddup(splitted[i]);
-		if (l_word >= 0)
+		if (l_word != ind)
 			patch = _strddup(splitted[i] + l_word + 1);
 		else
 			patch = NULL;
 		pre_patch[ind] = '\0';
 		norm_dyn_str(&patch), norm_dyn_str(&pre_patch);
 		query = _strddup(splitted[i] + _strlen(pre_patch));
-		l_word = last_oc(is_word, query);
-		query[l_word + 1] = '\0';
+		l_word = last_spn_oc(is_word, query + 1);
+		query[l_word + 2] = '\0';
 		if (splitted[i][ind] == splitted[i][ind + 1])
 			query = _strddup("$$");
 		if (splitted[i][ind + 1] == '?')
@@ -203,11 +207,47 @@ char *expand(char *input)
 	return (res);
 }
 
-void norm_dyn_str(char **str_ptr)
+char* var_replace(const char* string)
 {
-	if (*str_ptr && !(*str_ptr)[0])
+	const char* var_pat = "$_ABCDEFGHIJKLMNOP\
+		QRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	size_t string_length = _strlen((char *)string), env_var_length;
+	char* result = NULL, var_name[MVL], *env_var, *name_cpy;
+	size_t result_index = 0, j, var_len, i;
+
+	result = malloc((string_length + 1));
+	if (!result)
+		return (NULL);
+	for (i = 0; i < string_length; ++i)
 	{
-		free(*str_ptr);
-		*str_ptr = NULL;
+		if (string[i] == '$')
+		{
+			j = i + 1, var_len = 0;
+			while (_strchr(var_pat, string[j]) && var_len < MVL - 1)
+				var_name[var_len++] = string[j++];
+			var_name[var_len] = '\0'; name_cpy = malloc(_strlen(var_name) + 2);
+			if(!name_cpy)
+				return (NULL);
+			name_cpy[0] = '$';
+			_memcpy(var_name, name_cpy + 1, _strlen(var_name));
+			name_cpy[_strlen(var_name) + 1] = '\0';
+			if (var_len > 0)
+			{
+				env_var = lookup_var(name_cpy);
+				if (env_var != NULL)
+				{
+					env_var_length = _strlen(env_var);
+					result = _realloc(result, _strlen(result) + 1, _strlen(result)
+					 + 1 + _strlen(env_var));
+					_memcpy(env_var, result + result_index, _strlen(env_var));
+					result_index += env_var_length, i += var_len;
+					continue;
+				}
+			}
+		}
+		result[result_index++] = string[i];
 	}
+	result[result_index] = '\0';
+
+	return (result);
 }

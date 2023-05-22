@@ -21,14 +21,22 @@ void handle_parsed_commands(char **all_commands)
 		char *cmd_trim = _trim(all_commands[i]), *sub_cmd_trim = NULL;
 		char **all_c = NULL;
 		comm_list_t c_list = NULL;
-		int index = 0, k = 0;
+		int index = 0, k = 0, l_and, l_or, f_and, f_or;
 
 		if (in_str('|', cmd_trim) && in_str('&', cmd_trim))
 		{
-			if (first_oc_of(cmd_trim, '|') < first_oc_of(cmd_trim, '&'))
+			f_or = first_oc_of(cmd_trim, '|'), f_and = first_oc_of(cmd_trim, '&');
+			l_or = last_oc_of(cmd_trim, '|'), l_and = last_oc_of(cmd_trim, '&');
+			/* add more edge cases , not enough. check main.c */
+			/* | ... & */
+			/* | ... & */
+			if (f_and < f_or && l_and > l_or)
+				split_by_or_and_order(&c_list, all_c, all_commands[i]);
+			else if (f_or < f_and)
 				split_by_or_and_order(&c_list, all_c, all_commands[i]);
 			else
 				split_by_and_or_order(&c_list, all_c, all_commands[i]);
+			/* | ... &  .. |*/
 		}
 		else if (in_str('|', cmd_trim))
 		{

@@ -168,6 +168,7 @@ char *_setvar(char *input);
 void free_vars(var_t *list);
 char *lookup_var(char *input);
 char *expand(char *input);
+char* var_replace(const char* string);
 
 /* MISC */
 int find_max(int num1, int num2);
@@ -176,8 +177,14 @@ int is_hwp(char c);
 int is_print(char c);
 int last_oc_of(char *str, char c);
 int last_oc(int (* f)(char c), char *str);
+int last_spn_oc(int (* f)(char c), char *str);
 char *_itoa(int num);
 int dig_len(int num);
+char *comment_line(char **buff_ptr);
+void norm_dyn_str(char **str_ptr);
+char * _strchr(const char *str, char c);
+char* _strncpy(char* dest, const char* src, size_t n);
+void trim_str_arr(char **args);
 
 /* BUILTINS  AND HANDLERS */
 int (*get_builtin(char *command))(char **list);
@@ -213,5 +220,7 @@ void help_env(void);
 void help_setenv(void);
 void help_unsetenv(void);
 void help_history(void);
+
+#define MVL 128
 
 #endif/*___MAIN_*/

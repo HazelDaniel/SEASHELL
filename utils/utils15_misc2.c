@@ -1,5 +1,6 @@
 #include "main.h"
 
+
 int dig_len(int num)
 {
 	unsigned int num1;
@@ -81,4 +82,75 @@ wtok_t *gen_tok(char *str)
 		return (NULL);
 	}
 	return (new_tok);
+}
+
+char *comment_line(char **buff_ptr)
+{
+	char *cpy = NULL;
+	int hash_oc;
+
+	if (!buff_ptr)
+		return (NULL);
+	cpy = _strddup(*buff_ptr);
+	hash_oc = first_oc_of(cpy, '#');
+	if (hash_oc >= 0)
+	{
+		if (hash_oc > 0 && cpy[hash_oc - 1] == '\\')
+			;
+		else
+			cpy[hash_oc] = '\0', norm_dyn_str(&cpy);
+	}
+
+	return (cpy);
+}
+
+void norm_dyn_str(char **str_ptr)
+{
+	if (*str_ptr && !(*str_ptr)[0])
+	{
+		free(*str_ptr);
+		*str_ptr = NULL;
+	}
+}
+
+char * _strchr(const char *str, char c)
+{
+	int f_ind;
+	char *f_string;
+
+	f_ind = first_oc_of((char *)str, c);
+	if (f_ind < 0)
+		return (NULL);
+	else
+		f_string = (char *)str + f_ind;
+
+	return (f_string);
+}
+
+char* _strncpy(char* dest, const char* src, size_t n)
+{
+	char* dest_cpy = dest;
+
+	while (*src && n > 0)
+		*dest++ = *src++, n--;
+
+	while (n > 0)
+		*dest++ = '\0', n--;
+
+	return (dest_cpy);
+}
+
+void trim_str_arr(char **args)
+{
+	int i;
+	char *tmp;
+
+	if (!args)
+		return;
+	for (i = 0; args[i]; i++)
+	{
+		tmp = _trim(args[i]);
+		free(args[i]);
+		args[i] = tmp;
+	}
 }

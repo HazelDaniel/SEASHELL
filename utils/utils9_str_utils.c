@@ -118,4 +118,3 @@ char **word_tok(char *str)
 
 	return (s_arr);
 }
-
