@@ -100,6 +100,7 @@ void *_realloc(void *ptr, size_t old_size, size_t size)
 void free_str_arr(char **str_arr, int is_dyn)
 {
 	int i = 0;
+
 	if (!str_arr)
 		return;
 	for (; str_arr[i]; i++)

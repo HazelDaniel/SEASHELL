@@ -13,12 +13,11 @@
 	*     standard version in some cases
 	* Return: char *.
 */
-/*YOU ALWAYS WANNA PASS IN TRIMMED STRINGS, SO I PROVIDED A FUNCTION*/
 char *_strtok(char *str, char *delim)
 {
 	static int _index;
 	int i = 0, count = 0, rep_count;
-	static char *org_buff = NULL;
+	static char *org_buff;
 	ptrdiff_t diff = (ptrdiff_t)str;
 	static unsigned long int int_str;
 
@@ -161,7 +160,7 @@ int in_str(char c, char *str)
  * @src: source string
  * Return: char *
  **/
-char *_strcpy(char (*dest)[1024], char **src)
+char *_strcpy(char (*dest)[BUFF_LEN], char **src)
 {
 	size_t i;
 

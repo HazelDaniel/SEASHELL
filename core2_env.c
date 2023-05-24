@@ -1,6 +1,6 @@
 #include "utils/main.h"
 
-int _getAll_env()
+int getall_env(void)
 {
 	int i = 0;
 
@@ -11,6 +11,12 @@ int _getAll_env()
 	return (0);
 }
 
+/**
+  * _getenv - a function that gets a variable environment
+	* equivalent of a string
+  * @input: parameter of type char *.
+  * Return: char *.
+ */
 char *_getenv(char *input)
 {
 	int i = 0;
@@ -35,6 +41,13 @@ char *_getenv(char *input)
 	return (NULL);
 }
 
+/**
+  * _setenv - a function that sets
+	* a variable environment
+  * @input1: parameter of type char *.
+  * @input2: parameter of type char *.
+  * Return: int .
+ */
 int _setenv(char *input1, char *input2)
 {
 	int i = 0, len1 = _strlen(input1), len2 = _strlen(input2),
@@ -77,7 +90,12 @@ int _setenv(char *input1, char *input2)
 	return (0);
 }
 
-void _copyenv()
+/**
+  * _copyenv - a function makes a copy
+	* of the parent process's environment
+  * Return: void
+ */
+void _copyenv(void)
 {
 	int count, i;
 
@@ -91,6 +109,12 @@ void _copyenv()
 	_memcpy_ptr((void **)environ, (void **)new_environ, count);
 }
 
+/**
+  * _unsetenv - a function that unsets
+	* an environment variable
+  * @value: parameter of type char *.
+  * Return: int .
+ */
 int _unsetenv(char *value)
 {
 	int count, i;
@@ -111,7 +135,12 @@ int _unsetenv(char *value)
 		return (-1);
 }
 
-void _freenv()
+/**
+  * _freenv - a function that
+	* frees the environment
+  * Return: void
+ */
+void _freenv(void)
 {
 	free_str_arr(new_environ, 1);
 	new_environ = NULL;

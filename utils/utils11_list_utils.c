@@ -22,9 +22,13 @@ pathdir_t *linkpath(char *path)
 	return (head);
 }
 
+/**
+ * append_path - appends a directory to the path environment
+ * @value: the directory string
+ * Return: void
+ */
 void append_path(char *value)
-{
-	pathdir_t* new_path = (pathdir_t *)malloc(sizeof(pathdir_t)), *current;
+{ pathdir_t *new_path = (pathdir_t *)malloc(sizeof(pathdir_t)), *current;
 	char *cpy = _strddup(value), *strip_cpy = rm_tr_slash(cpy);
 
 	if (!new_path)
@@ -46,7 +50,11 @@ void append_path(char *value)
 	free(cpy);
 }
 
-void print_path()
+/**
+ * print_path - prints the path variable
+ * Return: void
+ */
+void print_path(void)
 {
 	pathdir_t *current = path_list;
 
@@ -57,6 +65,44 @@ void print_path()
 	while (current)
 	{
 		printf("current directory:%s\n", current->dir);
+		current = current->next;
+	}
+}
+/**
+ * free_path - frees the path variable
+ * Return: void
+ */
+void free_path(void)
+{
+	pathdir_t *current = path_list, *next;
+
+	if (!current)
+		return;
+
+	while (current)
+	{
+		next = current->next;
+		free(current->dir);
+		free(current);
+		current = next;
+	}
+
+}
+
+/**
+  * print_trash - prints the environment trash
+	* @list:  a parameter of type trashenv_t *
+  * Return: void
+ */
+void print_trash(trashenv_t *list)
+{
+	trashenv_t *current = list;
+
+	if (!current)
+		puts("(nil)");
+	while (current)
+	{
+		printf("current trash:%s\n", current->value);
 		current = current->next;
 	}
 }

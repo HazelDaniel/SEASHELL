@@ -1,8 +1,9 @@
 #include "utils/main.h"
 
-
 /**
- * help_all - Displays all possible builtin shellby commands.
+ * help_all - a function that Displays all
+ * possible builtin  commands.
+ * Return: void
  */
 void help_all(void)
 {
@@ -24,7 +25,9 @@ void help_all(void)
 }
 
 /**
- * help_alias - Displays information on the shellby builtin command 'alias'.
+ * help_alias - a function that displays
+ * information on the builtin command 'alias'.
+ * Return: void
  */
 void help_alias(void)
 {
@@ -46,7 +49,8 @@ void help_alias(void)
 }
 
 /**
- * help_cd - Displays information on the shellby builtin command 'cd'.
+ * help_cd - a function that Displays information on the builtin command 'cd'.
+ * Return: void
  */
 void help_cd(void)
 {
@@ -66,7 +70,8 @@ void help_cd(void)
 }
 
 /**
- * help_exit - Displays information on the shellby builtin command 'exit'.
+ * help_exit - Displays information on the  builtin command 'exit'.
+ * Return: void
  */
 void help_exit(void)
 {
@@ -82,11 +87,13 @@ void help_exit(void)
 }
 
 /**
- * help_help - Displays information on the shellby builtin command 'help'.
+ * help_help - Displays information on the
+ * builtin command 'help'.
+ * Return: void
  */
 void help_help(void)
 {
-	char *msg = "help: help\n\tSee all possible Shellby builtin commands.\n";
+	char *msg = "help: help\n\tSee all possible builtin commands.\n";
 
 	write(STDOUT_FILENO, msg, _strlen(msg));
 	msg = "\n      help [BUILTIN NAME]\n\tSee specific information on each ";

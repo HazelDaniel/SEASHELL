@@ -2,3 +2,6 @@ header-files
 BUGS.txt
 builtins
 TODO.txt
+test.txt
+betty_debug.c
+exit.txt

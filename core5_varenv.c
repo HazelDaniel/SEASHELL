@@ -4,7 +4,12 @@ static int compare_and_sub(var_t **current_ptr, var_t **new_ptr,
 	char **input_ptr, char **cpy_ptr, char **key_ptr);
 char *eval_n_expand(char **str_p);
 
-void _getall_vars()
+/**
+ * _getall_vars - a function that retrieves
+ * all the environment variables
+ * Return: void
+ **/
+void _getall_vars(void)
 {
 	int i = 0;
 	var_t *current = variables;
@@ -12,13 +17,19 @@ void _getall_vars()
 	if (!current)
 		puts("(nil)");
 
-	while(current)
+	while (current)
 	{
 		printf("%s\n", current->value);
 		current = current->next;
 	}
 }
 
+/**
+ * _getvar - a function that retrieves
+ * a shell variable
+ * @input: the input string
+ * Return: char *
+ **/
 char *_getvar(char *input)
 {
 	int i = 0;
@@ -45,13 +56,20 @@ char *_getvar(char *input)
 	return (NULL);
 }
 
+/**
+ * _setvar - a function that sets
+ * a shell variable
+ * @input: the input string
+ * Return: char *
+ **/
 char *_setvar(char *input)
 {
 	var_t *current = variables, *new_var, *prev;
 	char *cpy = NULL, *key = NULL;
 
 	if (is_start_str("$", input) &&
-		!(is_start_str("$=", input)))
+		!(is_start_str("$=", input)) &&
+		!(is_start_str("?=", input)))
 	{
 		return (NULL);
 	}
@@ -59,16 +77,14 @@ char *_setvar(char *input)
 	new_var = (var_t *)malloc(sizeof(var_t));
 	if (!new_var)
 		return (NULL);
-	new_var->value = _strddup(input);
-	new_var->next = NULL;
+	new_var->value = _strddup(input), new_var->next = NULL;
 	if (!variables)
 	{
 		variables = new_var;
 		return (new_var->value);
 	}
 	cpy = _strddup(input), key = _strtok(cpy, "=");
-	empty_state_buff("=");
-	current = variables;
+	empty_state_buff("="), current = variables;
 
 	if (!current->next)
 	{
@@ -94,6 +110,17 @@ char *_setvar(char *input)
 	return (new_var->value);
 }
 
+/**
+  * compare_and_sub - a utility function
+	* for checking the existence of an alias
+	* in the alias table
+  * @current_ptr: parameter of type alias_t **
+  * @new_ptr: parameter of type alias_t **
+  * @input_ptr: parameter of type char **
+  * @cpy_ptr: parameter of type char **
+  * @key_ptr: parameter of type char **
+  * Return: int
+ */
 static int compare_and_sub(var_t **current_ptr, var_t **new_ptr,
 	char **input_ptr, char **cpy_ptr, char **key_ptr)
 {
@@ -113,6 +140,12 @@ static int compare_and_sub(var_t **current_ptr, var_t **new_ptr,
 	return (0);
 }
 
+/**
+  * free_vars - a function that frees
+	* the shell variables
+  * @list: parameter of type char var_t *
+  * Return: void
+ */
 void free_vars(var_t *list)
 {
 	var_t *current = list, *next = NULL;
@@ -136,9 +169,17 @@ void free_vars(var_t *list)
 	list = NULL;
 }
 
+/**
+  * lookup_var - a function that does
+	* a lookup of any variable in both the shell
+	* and the environment
+  * @input: parameter of type char *.
+  * Return: char *.
+ */
 char *lookup_var(char *input)
 {
 	char *buff = NULL;
+
 	if (!is_start_str("$", input))
 		return (NULL);
 
@@ -200,19 +241,25 @@ char *expand(char *input)
 		_memcpy(match, res_match + _strlen(pre_patch), _strlen(match));
 		_memcpy(patch, res_match + _strlen(pre_patch)
 			+ _strlen(match), _strlen(patch)), free(splitted[i]),
-		free(query), free(pre_patch), free(match); free(patch);
+		free(query), free(pre_patch), free(match), free(patch);
 		splitted[i] = res_match;
 	}
 	res = (join_list(splitted)), free_str_arr(splitted, 1);
 	return (res);
 }
 
-char* var_replace(const char* string)
+/**
+  * var_replace - a function that does
+	* a variable expansion on input strings
+  * @string: the input string
+  * Return: char *.
+ */
+char *var_replace(const char *string)
 {
-	const char* var_pat = "$_ABCDEFGHIJKLMNOP\
-		QRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	const char *var_pat =
+		"$_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?$";
 	size_t string_length = _strlen((char *)string), env_var_length;
-	char* result = NULL, var_name[MVL], *env_var, *name_cpy;
+	char *result = NULL, var_name[MVL], *env_var, *name_cpy;
 	size_t result_index = 0, j, var_len, i;
 
 	result = malloc((string_length + 1));
@@ -225,11 +272,10 @@ char* var_replace(const char* string)
 			j = i + 1, var_len = 0;
 			while (_strchr(var_pat, string[j]) && var_len < MVL - 1)
 				var_name[var_len++] = string[j++];
-			var_name[var_len] = '\0'; name_cpy = malloc(_strlen(var_name) + 2);
-			if(!name_cpy)
+			var_name[var_len] = '\0', name_cpy = malloc(_strlen(var_name) + 2);
+			if (!name_cpy)
 				return (NULL);
-			name_cpy[0] = '$';
-			_memcpy(var_name, name_cpy + 1, _strlen(var_name));
+			name_cpy[0] = '$', _memcpy(var_name, name_cpy + 1, _strlen(var_name));
 			name_cpy[_strlen(var_name) + 1] = '\0';
 			if (var_len > 0)
 			{

@@ -10,11 +10,13 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <errno.h>
 
 /* MACROS */
 #define __cp__(x, y) (_strcpy(&x, &y))
 #define _al_len_(x) ((_len_p((void **)x)) + (1))
 #define EXIT (-3)
+#define BUFF_LEN 1024
 
 /* STRUCTURES AND DECLARATIONS */
 typedef struct command
@@ -23,6 +25,8 @@ typedef struct command
 	char *command;
 	int *status;
 	int id;
+	int is_linked;
+	struct command *list;
 	struct command *next;
 } comm_t;
 
@@ -75,6 +79,8 @@ extern alias_t *aliases;
 extern var_t *variables;
 extern char *name;
 extern int hist;
+extern int errno;
+extern char *callpwd;
 
 
 /* STRING UTILS */
@@ -109,8 +115,10 @@ void _memcpy(void *ptr, const void *newptr, unsigned int size);
 void _memcpy_ptr(void **ptr, void **newptr, unsigned int size);
 
 /* LIST UTILS */
-void append_comm_list(comm_list_t list, int *index);
+void append_comm_list(comm_list_t list);
 void append_comm(comm_list_t* list, char separator,
+	const char* command, int status);
+comm_t *prepend_comm(comm_list_t* list, char separator,
 	const char* command, int status);
 void print_comms(const comm_list_t list);
 void clear_comms(comm_list_t list);
@@ -125,6 +133,7 @@ trashenv_t *pop_trash();
 pathdir_t *linkpath(char *path);
 void append_path(char *value);
 void print_path();
+void free_path();
 
 /* SPLIT UTILS */
 void split_by_or(comm_list_t *c_list,
@@ -138,6 +147,7 @@ void split_by_or_and_order(comm_list_t *c_list,
 
 /* STATE UTILS */
 void empty_state_buff(char *delim);
+void cleanup();
 
 /* COMMAND HANDLERS */
 int parse_to_commands(char *string);
@@ -148,7 +158,7 @@ int exec_comms(const comm_list_t list);
 
 /*_________________CORE___________________*/
 /* ENVIRONMENT HANDLERS */
-int _getAll_env();
+int getall_env();
 char *_getenv(char *input);
 int _setenv(char *input1, char *input2);
 int _unsetenv(char *value);
@@ -192,6 +202,11 @@ void norm_dyn_str(char **str_ptr);
 char * _strchr(const char *str, char c);
 char* _strncpy(char* dest, const char* src, size_t n);
 void trim_str_arr(char **args);
+void format_args(char **args);
+int is_graph(char c);
+int is_dot(char c);
+int is_tilde(char c);
+int is_hyp(char c);
 
 /* BUILTINS  AND HANDLERS */
 int (*get_builtin(char *command))(char **list);
@@ -206,6 +221,13 @@ int handle_print_env(char **args);
 int handle_cd(char **args);
 int handle_help(char **args);
 int handle_exit(char **args);
+int handle_nothing(char **args);
+
+/* CORE UTILS */
+int execute(char *command);
+int create_ex_stat(int status);
+void exec_on_exit(void);
+void set_exec_dir(char *argv[]);
 
 /* ERROR HANDLERS */
 int create_error(char **args, int err);

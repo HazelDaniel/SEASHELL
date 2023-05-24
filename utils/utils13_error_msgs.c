@@ -100,12 +100,17 @@ char *error_2_exit(char **args)
  */
 char *error_2_cd(char **args)
 {
-	char *error, *hist_str;
+	char *error = NULL, *hist_str;
 	int len;
 
 	hist_str = _itoa(hist);
 	if (!hist_str)
 		return (NULL);
+	if (!args)
+	{
+		puts("no argument passed!");
+		return (NULL);
+	}
 
 	if (args[0][0] == '-')
 		args[0][2] = '\0';
@@ -163,5 +168,5 @@ char *error_2_syntax(char **args)
 
 	free(hist_str);
 	return (error);
-   
+
 }

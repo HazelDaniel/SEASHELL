@@ -3,6 +3,12 @@
 static int compare_and_sub(alias_t **current_ptr, alias_t **new_ptr,
 	char **input_ptr, char **cpy_ptr, char **key_ptr);
 
+/**
+  * alias - a function that exposes the core
+	* functionality of the alias command
+  * @input: parameter of type char *.
+  * Return: int .
+ */
 int alias(char *input)
 {
 	if (!input)
@@ -19,6 +25,12 @@ int alias(char *input)
 	return (-1);
 }
 
+/**
+  * _getalias - a function that retrieves
+	* an alias from an input string
+  * @input: parameter of type char *.
+  * Return: char *.
+ */
 char *_getalias(char *input)
 {
 	int i = 0;
@@ -29,6 +41,7 @@ char *_getalias(char *input)
 	{
 		if (is_start_str(input, current->value))
 		{
+			printf("%s\n", current->value);
 			return (current->value);
 		}
 		current = current->next;
@@ -36,9 +49,15 @@ char *_getalias(char *input)
 	return (NULL);
 }
 
+/**
+  * _setalias - a function that sets
+	* an alias given an input string
+  * @input: parameter of type char *.
+  * Return: char *.
+ */
 char *_setalias(char *input)
 {
-	alias_t *new_alias , *current;
+	alias_t *new_alias, *current;
 	char *cpy = NULL, *key = NULL;
 
 	new_alias = (alias_t *)malloc(sizeof(alias_t));
@@ -79,6 +98,12 @@ char *_setalias(char *input)
 	return (new_alias->value);
 }
 
+/**
+  * free_aliases - a function that
+	* frees up all the aliases defined
+  * @list: parameter of type alias_t *
+  * Return: void
+ */
 void free_aliases(alias_t *list)
 {
 	alias_t *current = list, *next = NULL;
@@ -102,7 +127,11 @@ void free_aliases(alias_t *list)
 	list = NULL;
 }
 
-void print_aliases()
+/**
+  * print_aliases - a function that prints all aliases
+  * Return: void .
+ */
+void print_aliases(void)
 {
 	alias_t *current = aliases, *next = NULL;
 
@@ -113,6 +142,17 @@ void print_aliases()
 	}
 }
 
+/**
+  * compare_and_sub - a utility function
+	* for checking the existence of an alias
+	* in the alias table
+  * @current_ptr: parameter of type alias_t **
+  * @new_ptr: parameter of type alias_t **
+  * @input_ptr: parameter of type char **
+  * @cpy_ptr: parameter of type char **
+  * @key_ptr: parameter of type char **
+  * Return: int
+ */
 static int compare_and_sub(alias_t **current_ptr, alias_t **new_ptr,
 	char **input_ptr, char **cpy_ptr, char **key_ptr)
 {

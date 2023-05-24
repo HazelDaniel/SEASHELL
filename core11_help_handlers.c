@@ -2,7 +2,8 @@
 
 
 /**
- * help_env - Displays information on the shellby builtin command 'env'.
+ * help_env - Displays information on the builtin command 'env'.
+ * Return: void
  */
 void help_env(void)
 {
@@ -12,7 +13,8 @@ void help_env(void)
 }
 
 /**
- * help_setenv - Displays information on the shellby builtin command 'setenv'.
+ * help_setenv - Displays information on the builtin command 'setenv'.
+ * Return: void
  */
 void help_setenv(void)
 {
@@ -26,8 +28,9 @@ void help_setenv(void)
 }
 
 /**
- * help_unsetenv - Displays information on the shellby builtin command
+ * help_unsetenv - Displays information on the builtin command
  * 'unsetenv'.
+ * Return: void
  */
 void help_unsetenv(void)
 {

@@ -1,5 +1,12 @@
 #include "main.h"
 
+/**
+ * _splitstr - a function that splits a string
+ * into an array of strings based on a delimiter
+ * @str: the input string
+ * @delim: the delimiter
+ * Return: char **
+ **/
 char **_splitstr(char *str, char *delim)
 {
 	char **res_str = NULL, *token, cp_buff[1024] = "", *res_buff[1024] = {NULL},
@@ -66,27 +73,6 @@ char *_strddup(char *src)
 }
 
 /**
- * adj_char_num - a function that returns
- * the number of repeating characters in
- * a string starting at the index of the first
- * repeating character
- * @str: the string
- * @c: the repeating character
- * @i: the index
- * Return: int
- **/
-int adj_char_num(char *str, char c, int i)
-{
-	int tmp = i, count = 0;
-
-	(void)i;
-	while (str[tmp] && str[tmp] == c)
-		count++, tmp++;
-	
-	return (count);
-}
-
-/**
  * first_oc_of - a function that returns
  * the first occurrence of a character
  * in a string
@@ -107,7 +93,15 @@ int first_oc_of(char *str, char c)
 		return (-1);
 }
 
-int first_oc(int (* f)(char c), char *str)
+/**
+ * first_oc - a function that returns
+ * the first occurrence of a character
+ * in a string that exhibits a property
+ * @f: the property - as a function
+ * @str: the string
+ * Return: int
+ **/
+int first_oc(int (*f)(char c), char *str)
 {
 	int count = 0;
 
@@ -120,7 +114,7 @@ int first_oc(int (* f)(char c), char *str)
 		return (-1);
 }
 /**
- * _strlen_p - returns the length of an array of
+ * _len_p - returns the length of an array of
  * derived objects
  * @p: array of derived objects
  * Return: int

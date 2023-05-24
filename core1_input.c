@@ -1,5 +1,14 @@
 #include "utils/main.h"
 
+/**
+  * _getline - a function that gets the input
+	* from the terminal and stores it in a buffer
+  * @line_addr: parameter of type char **.
+  * @n: parameter of type size_t *.
+  * @stream: parameter of type FILE *.
+	* could be a desciptor or a stream
+  * Return: ssize_t .
+ */
 ssize_t _getline(char **line_addr, size_t *n, FILE *stream)
 {
 	char *buffer = NULL, read_c = '\0';
@@ -9,52 +18,34 @@ ssize_t _getline(char **line_addr, size_t *n, FILE *stream)
 	if (count == 0)
 		fflush(stream);
 	else
-		return(-1);
-
+		return (-1);
 	count = 0;
-
 	buffer = malloc(120 * sizeof(char));
 	if (!buffer)
 		return (-1);
-
 	while (read_c != '\n')
 	{
 		read_n = read(STDIN_FILENO, &read_c, 1);
 		if (read_n == -1 || (!read_n && !count))
 		{
-			/* NOTHING IS TYPED IN */
-			// puts("here");
-			free(buffer);
-			buffer = NULL;
+			free(buffer), buffer = NULL;
 			return (-1);
 		}
 		if (!read_n && count)
 		{
-			// puts("read some stuffs tho");
-			/*normal end of stream*/
 			count++;
 			break;
 		}
-		// puts("reading stuff");
 		if (count >= 120)
 			buffer = _realloc(buffer, _al_len_(buffer), _al_len_(buffer) + 1);
 		if (buffer == NULL)
 			return (-1);
 		buffer[count] = read_c;
 		count++;
-		// printf("count is :%zu\n", count);
 	}
 	buffer[count] = '\0';
-
 	if (read_c == '\n')
-	{
-		// printf("buffer is :%s\t", buffer);
-		// printf("and count is :%zu\n", count);
 		_memcpy(buffer, *line_addr, count);
-	}
-
-	// puts("round up");
-
 	ret = count;
 	if (read_n)
 		count = 0;

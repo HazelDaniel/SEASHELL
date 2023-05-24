@@ -1,5 +1,11 @@
 #include "utils/main.h"
 
+/**
+  * handle_exit - a function that handles
+	* the exit commmand
+  * @args: parameter of type char **.
+  * Return: int .
+ */
 int handle_exit(char **args)
 {
 	char *input;
@@ -10,13 +16,37 @@ int handle_exit(char **args)
 		return (exit_(NULL, args));
 }
 
+/**
+  * handle_nothing - a function that handles
+	* the '\n' command
+  * @args: parameter of type char **.
+  * Return: int .
+ */
+int handle_nothing(char **args)
+{
+	(void)args;
+	return (0);
+}
+
+/**
+  * handle_print_env - a function that handles
+	* the env command
+  * @args: parameter of type char **.
+  * Return: int .
+ */
 int handle_print_env(char **args)
 {
 	(void)args;
 
-	return (_getAll_env());
+	return (getall_env());
 }
 
+/**
+  * handle_set_env - a function that handles
+	* the setenv command
+  * @args: parameter of type char **.
+  * Return: int .
+ */
 int handle_set_env(char **args)
 {
 	int arg_len = _len_p((void *)args);
@@ -27,6 +57,12 @@ int handle_set_env(char **args)
 	return (_setenv(args[0], args[1]));
 }
 
+/**
+  * handle_unset_env - a function that handles
+	* the unsetenv commmand
+  * @args: parameter of type char **.
+  * Return: int .
+ */
 int handle_unset_env(char **args)
 {
 	int arg_len = _len_p((void *)args), i;
@@ -45,29 +81,4 @@ int handle_unset_env(char **args)
 	}
 
 	return (_unsetenv(args[0]));
-}
-
-int handle_alias(char **args)
-{
-	int i, ret_count = 0;
-
-	if (!args || !args[0])
-		return alias(NULL);
-	for (i = 0; args[i]; i++)
-	{
-		if (in_str('=', args[i]))
-		{
-			ret_count += alias(args[i]);
-		}
-		else
-		{
-			if (!_getalias(args[i]))
-				ret_count--;
-		}
-	}
-
-	if (ret_count == 0)
-		return (0);
-	else
-		return (-1);
 }

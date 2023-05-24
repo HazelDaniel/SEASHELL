@@ -1,5 +1,11 @@
 #include "main.h"
 
+/**
+  * is_start_str - the function name
+  * @strsub: parameter of type char *.
+  * @strsup: parameter of type char *.
+  * Return: int .
+ */
 int is_start_str(char *strsub, char *strsup)
 {
 	int sub_len = _strlen(strsub), sup_len = _strlen(strsup);
@@ -17,10 +23,17 @@ int is_start_str(char *strsub, char *strsup)
 	return (i == sub_len);
 }
 
+/**
+  * is_end_str - the function name
+  * @strsub: parameter of type char *.
+  * @strsup: parameter of type char *.
+  * Return: int .
+ */
 int is_end_str(char *strsub, char *strsup)
 {
 	int sub_len = _strlen(strsub), sup_len = _strlen(strsup);
 	int i = 0;
+
 	if (sub_len > sup_len)
 		return (0);
 
@@ -35,6 +48,11 @@ int is_end_str(char *strsub, char *strsup)
 	return (i == -1);
 }
 
+/**
+  * rm_tr_slash - the function name
+  * @str: parameter of type char *.
+  * Return: char *.
+ */
 char *rm_tr_slash(char *str)
 {
 	int i;
@@ -47,6 +65,11 @@ char *rm_tr_slash(char *str)
 	return (cpy);
 }
 
+/**
+  * join_list - the function name
+  * @list: parameter of type char **.
+  * Return: char *.
+ */
 char *join_list(char **list)
 {
 	char *acc = NULL;
@@ -71,6 +94,11 @@ char *join_list(char **list)
 	return (acc);
 }
 
+/**
+  * word_tok - the function name
+  * @str: parameter of type char *.
+  * Return: char **.
+ */
 char **word_tok(char *str)
 {
 	wtok_t *new_tok = NULL;
@@ -79,8 +107,7 @@ char **word_tok(char *str)
 
 	if (!str)
 		return (NULL);
-	cpy = _strddup(str);
-	new_tok = gen_tok(cpy);
+	cpy = _strddup(str), new_tok = gen_tok(cpy);
 	if (!new_tok)
 	{
 		s_arr = malloc(sizeof(char *) + 1);
@@ -98,7 +125,6 @@ char **word_tok(char *str)
 		return (NULL);
 	}
 	s_arr[count] = NULL;
-
 	for (i = 0; i < count; i++)
 	{
 		point = new_tok->check_points[i];
@@ -110,9 +136,7 @@ char **word_tok(char *str)
 		}
 		n_str[_strlen(cpy + point + 1) + 1] = '\0';
 		_memcpy((cpy + point + 1), n_str + 1, _strlen(cpy + point + 1));
-		n_str[0] = new_tok->vals[i];
-		s_arr[i] = _strddup(n_str);
-		n_str = NULL;
+		n_str[0] = new_tok->vals[i], s_arr[i] = _strddup(n_str), n_str = NULL;
 	}
 	free(new_tok);
 

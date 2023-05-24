@@ -1,5 +1,12 @@
 #include "utils/main.h"
 
+/**
+  * create_error - a function that issues
+  * an error based on an error code
+  * @args: a parameter of type char **
+  * @err: the error code
+  * Return: int
+	*/
 int create_error(char **args, int err)
 {
 	char *error;

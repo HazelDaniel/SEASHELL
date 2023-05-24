@@ -17,7 +17,7 @@ void split_by_or(comm_list_t *c_list,
 	raw_token = _splitstr(cmd_trim, "|");
 	for (j = 0; raw_token[j]; j++)
 		append_comm(c_list, '|', raw_token[j], 0);
-	
+
 	free(raw_token);
 	free(cmd_trim);
 }
@@ -39,7 +39,7 @@ void split_by_and(comm_list_t *c_list,
 	raw_token = _splitstr(cmd_trim, "&");
 	for (j = 0; raw_token[j]; j++)
 		append_comm(c_list, '&', raw_token[j], 0);
-	
+
 	free(raw_token);
 	free(cmd_trim);
 }
