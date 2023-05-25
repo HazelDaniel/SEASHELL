@@ -95,12 +95,10 @@ int exec_all_commands(void)
 		return (-1);
 	}
 	handle_linked_comms();
-	puts("<><><<><><<><><><>><<><><><>");
 	for (; commands[i]; i++)
 	{
 		current = commands[i];
 		ret_count += exec_comms(current);
-	puts("<><><<><><<><><><>><<><><><>");
 	}
 	return (ret_count);
 }

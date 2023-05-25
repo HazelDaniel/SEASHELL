@@ -95,7 +95,6 @@ char *error_2_exit(char **args)
 /**
  * error_2_cd - Creates an error message for cd errors.
  * @args: An array of arguments passed to the command.
- *
  * Return: The error string.
  */
 char *error_2_cd(char **args)

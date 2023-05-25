@@ -1,5 +1,10 @@
 #include "utils/main.h"
 
+/**
+ * execute - a function that executes a command
+ * @command: the command to execute
+ * Return: int
+ **/
 int execute(char *command)
 {
 	char **args, *tmp, *res_tmp;
@@ -7,7 +12,7 @@ int execute(char *command)
 	pid_t child_pid;
 
 	args = _splitstr(command, " \t"), format_args(args);
-	if (!(!args || !args[0]))
+	if (args && args[0])
 	{
 		command = args[0];
 		f = get_builtin(command);
@@ -45,7 +50,7 @@ int execute(char *command)
 					if (errno == EACCES)
 						ret_num = (create_error(args, 126));
 					if (create_ex_stat(ret_num))
-						return(1);
+						return (1);
 					cleanup(), _exit(ret_num);
 				}
 				else
@@ -53,7 +58,7 @@ int execute(char *command)
 					wait(&status);
 					ret_num = WEXITSTATUS(status);
 					if (create_ex_stat(status))
-						return(1);
+						return (1);
 				}
 			}
 			if (indic)
@@ -87,6 +92,38 @@ int create_ex_stat(int status)
 		return (1);
 	}
 	res[0] = '?', res[1] = '=';
+	_memcpy(tmp, res + 2, _strlen(tmp));
+	if (!_setvar(res))
+	{
+		free(tmp), free(res);
+		return (1);
+	}
+	free(tmp), free(res);
+
+	return (0);
+}
+
+/**
+ * create_pid - a function that
+ * sets the pid of a process
+ * to a shell variable $$
+ * @pid: a parameter of type int
+ * Return: int
+ **/
+int create_pid(int pid)
+{
+	char *tmp, *res;
+
+	tmp = _itoa(pid);
+	if (!tmp)
+		return (1);
+	res = malloc(_strlen(tmp) + 3);
+	if (!res)
+	{
+		free(tmp);
+		return (1);
+	}
+	res[0] = '$', res[1] = '=';
 	_memcpy(tmp, res + 2, _strlen(tmp));
 	if (!_setvar(res))
 	{

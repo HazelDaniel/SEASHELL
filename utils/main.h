@@ -226,6 +226,7 @@ int handle_nothing(char **args);
 /* CORE UTILS */
 int execute(char *command);
 int create_ex_stat(int status);
+int create_pid(int pid);
 void exec_on_exit(void);
 void set_exec_dir(char *argv[]);
 

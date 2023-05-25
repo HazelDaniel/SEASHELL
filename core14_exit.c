@@ -1,5 +1,9 @@
 #include "utils/main.h"
 
+/**
+  * exec_on_exit - exit handler
+  * Return: void .
+ */
 void exec_on_exit(void)
 {
 	int access_n, read_n, count = 0, i;
@@ -21,7 +25,7 @@ void exec_on_exit(void)
 		return;
 	}
 	buff = malloc(BUFF_LEN * sizeof(char));
-	while ((read_n = read(fd, buff, sizeof(buff))) > 0)
+	while ((read_n = read(fd, buff, BUFF_LEN)) > 0)
 	{
 		if (count >= _strlen(buff) - 1)
 		{
@@ -36,13 +40,10 @@ void exec_on_exit(void)
 	}
 	if (read_n == -1)
 		puts("error with the read");
-	printf("the read buffer is :%s\n", buff);
 	exec_list = _splitstr(buff, "\n");
 
 	for (i = 0; exec_list[i]; i++)
-	{
-		printf("command to execute :%s\n", exec_list[i]);
-	}
+		execute(exec_list[i]);
 
 	fd_str = _itoa(fd);
 	if (close(fd) != -1)
@@ -51,15 +52,20 @@ void exec_on_exit(void)
 	write(STDERR_FILENO, fd_str, _strlen(fd_str));
 	write(STDERR_FILENO, "\n", 1);
 
-	free(callpwd), free(fd_str);
+	free(callpwd), free(fd_str), cleanup();
 }
 
+/**
+  * set_exec_dir - the function name
+  * @argv: parameter of type (char *)[].
+  * Return: void .
+ */
 void set_exec_dir(char *argv[])
 {
 	if (_len_p((void *)argv) == 2)
 	{
 		callpwd = _getenv("PWD");
-		callpwd = _realloc(callpwd, _strlen(callpwd) + 1 , _strlen(callpwd) + _strlen(argv[1]) + 2);
+		callpwd = _realloc(callpwd, _strlen(callpwd) + 1, _strlen(callpwd) + _strlen(argv[1]) + 2);
 		_memcpy("/", callpwd + _strlen(callpwd), 1);
 		_memcpy(argv[1], callpwd + _strlen(callpwd), _strlen(argv[1]));
 	}

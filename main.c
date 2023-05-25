@@ -41,14 +41,13 @@ void handle_signal(int sig)
  **/
 int main(int argc, char *argv[], char *envp[])
 {
-	char *buff = _getenv("x"), *test_str = "hello# world";
-	char **cmd, *path_str;
+	char *buff = NULL, **cmd, *path_str;
 	int status;
 	size_t read = 0, size = 0, ret_count;
+	pid_t pid = getpid();
 
-	_copyenv();
-	set_exec_dir(argv);
-	atexit(exec_on_exit);
+	_copyenv(), create_pid(pid), _setenv("?", "0");
+	set_exec_dir(argv), atexit(exec_on_exit);
 	path_str = _getenv("PATH");
 	linkpath(path_str);
 	name = argv[0], (void)envp;
@@ -78,8 +77,6 @@ int main(int argc, char *argv[], char *envp[])
 		free(prompt), free(buff);
 		buff = NULL, prompt = NULL;
 	}
-
-	cleanup();
 
 	return (ret_count);
 }

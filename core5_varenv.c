@@ -190,64 +190,6 @@ char *lookup_var(char *input)
 	return (buff);
 }
 
-char *expand(char *input)
-{
-	char **splitted = NULL, *match, *query,
-	*res = NULL, *res_match, *patch = NULL, *pre_patch = NULL;
-	int i, ind = -1, ind2 = -1, l_word = -1, res_len;
-
-	splitted = word_tok(input);
-	if (!splitted)
-		return (NULL);
-	for (i = 0; splitted[i]; i++)
-	{
-		if (!in_str('$', splitted[i]))
-			continue;
-		ind = first_oc_of(splitted[i], '$');
-		ind2 = last_oc_of(splitted[i], '$');
-		if (ind2 > ind + 1)
-			continue;
-		l_word = last_spn_oc(is_word, splitted[i] + ind + 1);
-		l_word += ind + 1;
-		pre_patch = _strddup(splitted[i]);
-		if (l_word != ind)
-			patch = _strddup(splitted[i] + l_word + 1);
-		else
-			patch = NULL;
-		pre_patch[ind] = '\0';
-		norm_dyn_str(&patch), norm_dyn_str(&pre_patch);
-		query = _strddup(splitted[i] + _strlen(pre_patch));
-		l_word = last_spn_oc(is_word, query + 1);
-		query[l_word + 2] = '\0';
-		if (splitted[i][ind] == splitted[i][ind + 1])
-			query = _strddup("$$");
-		if (splitted[i][ind + 1] == '?')
-			query = _strddup("$?");
-		match = lookup_var(query);
-		norm_dyn_str(&query);
-		if (!query || !match)
-		{
-			if (!query)
-				match = _strddup("$");
-			free(pre_patch), free(match), free(patch), free(query);
-			continue;
-		}
-		res_len = _strlen(pre_patch) + _strlen(match) + _strlen(patch);
-		res_match = malloc(res_len + 1);
-		if (!res_match)
-			return (NULL);
-		res_match[res_len] = '\0';
-		_memcpy(pre_patch, res_match, _strlen(pre_patch));
-		_memcpy(match, res_match + _strlen(pre_patch), _strlen(match));
-		_memcpy(patch, res_match + _strlen(pre_patch)
-			+ _strlen(match), _strlen(patch)), free(splitted[i]),
-		free(query), free(pre_patch), free(match), free(patch);
-		splitted[i] = res_match;
-	}
-	res = (join_list(splitted)), free_str_arr(splitted, 1);
-	return (res);
-}
-
 /**
   * var_replace - a function that does
 	* a variable expansion on input strings
@@ -262,7 +204,7 @@ char *var_replace(const char *string)
 	char *result = NULL, var_name[MVL], *env_var, *name_cpy;
 	size_t result_index = 0, j, var_len, i;
 
-	result = malloc((string_length + 1));
+	result = malloc(sizeof(char) *(string_length + 1));
 	if (!result)
 		return (NULL);
 	for (i = 0; i < string_length; ++i)
@@ -270,7 +212,7 @@ char *var_replace(const char *string)
 		if (string[i] == '$')
 		{
 			j = i + 1, var_len = 0;
-			while (_strchr(var_pat, string[j]) && var_len < MVL - 1)
+			while (_strchr(var_pat, string[j]) && var_len < MVL - 1 && j < string_length)
 				var_name[var_len++] = string[j++];
 			var_name[var_len] = '\0', name_cpy = malloc(_strlen(var_name) + 2);
 			if (!name_cpy)
@@ -295,5 +237,5 @@ char *var_replace(const char *string)
 	}
 	result[result_index] = '\0';
 
-	return (result);
+	return (_strlen(result) == 1 && !*result ? NULL : result);
 }
